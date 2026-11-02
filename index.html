@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Picanha Divina — Cardápio digital (protótipo)</title>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#171717;--wine:#7B1E24;--gold:#C8A96B;--paper:#F8F5EF;--line:#E5E5E5;--card:#fff;--muted:#5c5650;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:120px}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 Figtree,system-ui,sans-serif}
+h1,h2,h3,.brand{font-family:"Young Serif",Georgia,serif;font-weight:400;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;min-height:44px;border-radius:10px;border:1px solid transparent;padding:0 16px;font-weight:700}
+.btn{background:var(--wine);color:#fff}.btn:hover{background:#621419}
+.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.gold{background:var(--gold);color:var(--ink)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+header.top{position:sticky;top:0;z-index:20;background:var(--ink);color:var(--paper);border-bottom:2px solid var(--gold)}
+.top .wrap{display:flex;align-items:center;gap:12px;justify-content:space-between;padding-top:10px;padding-bottom:10px}
+.brand{font-size:1.35rem;color:var(--gold);line-height:1.1}
+.sub{font-size:.75rem;opacity:.75}
+.nav{display:flex;gap:8px;align-items:center}
+.nav .ghost{color:var(--paper);border-color:#ffffff33;min-height:40px}
+.hero{background:linear-gradient(115deg,#171717 0%,var(--wine) 70%,#a8343b);color:var(--paper);position:relative;overflow:hidden}
+.hero .wrap{display:grid;gap:20px;padding-top:44px;padding-bottom:44px;grid-template-columns:1fr;align-items:center}
+.hero h1{font-size:clamp(2rem,6vw,3.4rem);line-height:1.08;max-width:14em}
+.hero p{max-width:34em;opacity:.9}
+.plate{font-size:clamp(7rem,28vw,13rem);line-height:1;text-align:center;filter:drop-shadow(0 12px 24px #0007)}
+@media(min-width:760px){.hero .wrap{grid-template-columns:1.4fr 1fr}}
+.demo{display:inline-block;background:#fff2;border:1px dashed var(--gold);color:var(--gold);border-radius:99px;padding:2px 10px;font-size:.75rem;font-weight:700}
+.tools{position:sticky;top:60px;z-index:15;background:var(--paper);padding:10px 0;border-bottom:1px solid var(--line)}
+.tools input{width:100%;min-height:44px;border:1px solid var(--line);border-radius:10px;padding:0 14px;background:#fff}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 2px;scrollbar-width:none}
+.chip{white-space:nowrap;background:#fff;border:1px solid var(--line);min-height:40px}
+.chip.on{background:var(--ink);color:var(--gold);border-color:var(--ink)}
+section.cat{padding-top:26px}
+section.cat h2{font-size:1.6rem;border-bottom:2px solid var(--gold);display:inline-block;padding-bottom:4px;margin-bottom:14px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 24px #17171722}
+.img{height:150px;display:grid;place-items:center;font-size:4.6rem;position:relative}
+.tag{position:absolute;top:10px;left:10px;background:var(--ink);color:var(--gold);font-size:.72rem;font-weight:700;border-radius:99px;padding:2px 10px}
+.card .b{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h3{font-size:1.1rem}.card p{margin:0;color:var(--muted);font-size:.92rem;flex:1}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.price{font-weight:700;font-size:1.25rem;color:var(--wine)}
+.card .btn{min-height:40px;padding:0 12px;font-size:.9rem}
+.info{background:var(--ink);color:var(--paper);margin-top:40px;padding:34px 0}
+.info .wrap{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.info h3{color:var(--gold);margin-bottom:6px}
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+.fab button{box-shadow:0 6px 16px #0004}
+#drawer{position:fixed;inset:0;z-index:40;background:#000a;display:none;justify-content:flex-end}
+#drawer.open{display:flex}
+#drawer aside{background:var(--paper);width:min(420px,100%);height:100%;padding:18px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.li{display:grid;grid-template-columns:1fr auto;gap:4px 10px;border-bottom:1px solid var(--line);padding:8px 0}
+.qty{display:flex;align-items:center;gap:6px}.qty button{min-height:36px;min-width:36px;padding:0}
+.empty{color:var(--muted);padding:20px 0}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--gold);padding:10px 16px;border-radius:99px;z-index:60;font-weight:700}
+/* admin */
+#admin{display:none}
+body.adm #pub{display:none}body.adm #admin{display:block}
+.atabs{display:flex;gap:6px;overflow-x:auto;padding:14px 0}
+.atabs button{background:#fff;border:1px solid var(--line);white-space:nowrap}
+.atabs button.on{background:var(--wine);color:#fff}
+.kpis{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-bottom:16px}
+.kpi,.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+.kpi b{display:block;font-family:"Young Serif",serif;font-size:1.8rem;color:var(--wine);font-weight:400}
+.kpi small,.muted{color:var(--muted)}
+.panel{margin-bottom:14px}.panel h3{margin-bottom:10px}
+.two{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.scroll{overflow-x:auto}
+td .btn,td .ghost{min-height:34px;padding:0 10px;font-size:.82rem}
+label{display:block;font-size:.85rem;font-weight:700;margin:10px 0 4px}
+input[type=text],input[type=number],select,textarea{width:100%;min-height:42px;border:1px solid #cfcac2;border-radius:10px;padding:8px 12px;background:#fff}
+input[type=color]{width:56px;height:42px;border:1px solid #cfcac2;border-radius:8px;padding:2px;background:#fff}
+.err{color:#b00020;font-size:.82rem;min-height:1em}
+.warn{background:#fff6dd;border-left:4px solid var(--gold);padding:12px;border-radius:8px}
+.bar{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.88rem}
+.bar i{display:block;height:14px;background:var(--wine);border-radius:4px}
+.bar span{min-width:120px}
+.ok{display:inline-block;background:#e3f4e6;color:#1f6b2f;border-radius:99px;padding:2px 10px;font-weight:700;font-size:.8rem}
+code{background:#eee;padding:2px 6px;border-radius:6px;word-break:break-all}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div id="pub">
+<header class="top"><div class="wrap">
+ <div><div class="brand" id="bName">Picanha Divina</div><div class="sub" id="bSub">O sabor do verdadeiro churrasco brasileiro</div></div>
+ <nav class="nav"><button class="ghost" onclick="go('menu')">Cardápio</button><button class="ghost" onclick="go('info')">Contato</button><button class="gold" onclick="showAdmin(true)">Painel administrativo</button></nav>
+</div></header>
+<div class="hero"><div class="wrap">
+ <div><span class="demo">PROTÓTIPO DE DEMONSTRAÇÃO · restaurante fictício</span>
+ <h1 style="margin-top:12px">Uma experiência que vai além do sabor</h1>
+ <p>Cortes selecionados, brasa no ponto e acompanhamentos de casa. Aproxime o celular, escolha com calma e descubra o cardápio da Picanha Divina.</p>
+ <button class="gold" onclick="go('menu')">Explorar cardápio</button></div>
+ <div class="plate" id="bPlate" aria-hidden="true">🥩</div>
+</div></div>
+<main class="wrap" id="menu">
+ <div class="tools"><input id="q" type="search" placeholder="Buscar prato ou bebida" aria-label="Buscar produtos"><div class="chips" id="chips"></div></div>
+ <div id="list"></div>
+</main>
+<footer class="info" id="info"><div class="wrap">
+ <div><h3>Endereço</h3>Rua Demonstrativa, 000<br>Cidade Exemplo — UF<br><small>(endereço fictício)</small></div>
+ <div><h3>Horário</h3>Ter a dom: 11h30 às 23h<br>Segunda: fechado<br><small>(horário fictício)</small></div>
+ <div><h3>Contato</h3>Telefone: (00) 0000-0000<br>Instagram: @picanhadivina.demo<br><small>(dados fictícios)</small></div>
+</div></footer>
+<div class="fab"><button class="ghost" id="top" style="background:#fff;display:none" onclick="scrollTo({top:0})" aria-label="Voltar ao topo">↑ Topo</button><button class="btn" onclick="drawer(true)" id="cartBtn">Pedido (demo) · 0</button></div>
+<div id="drawer" onclick="if(event.target===this)drawer(false)"><aside>
+ <div class="row"><h2>Seu pedido</h2><button class="ghost" onclick="drawer(false)">Fechar</button></div>
+ <span class="demo" style="color:var(--wine);border-color:var(--wine);background:#7B1E2412;align-self:flex-start">DEMONSTRAÇÃO — nenhum pedido é enviado</span>
+ <div id="cart"></div>
+</aside></div>
+</div>
+
+<div id="admin"><header class="top"><div class="wrap">
+ <div><div class="brand">Painel administrativo</div><div class="sub">Ambiente de demonstração · alterações valem só nesta sessão</div></div>
+ <button class="gold" onclick="showAdmin(false)">Ver cardápio</button>
+</div></header>
+<div class="wrap"><div class="atabs" id="atabs"></div><div id="aview"></div></div></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const brl=n=>'R$ '+Number(n).toFixed(2).replace('.',',');
+const S={
+ name:'Picanha Divina',sub:'O sabor do verdadeiro churrasco brasileiro',plate:'🥩',
+ colors:{wine:'#7B1E24',gold:'#C8A96B',ink:'#171717',paper:'#F8F5EF'},
+ cats:[{id:1,name:'Carnes e Picanhas'},{id:2,name:'Pratos Executivos'},{id:3,name:'Hambúrgueres Artesanais'},{id:4,name:'Acompanhamentos'},{id:5,name:'Bebidas'},{id:6,name:'Sobremesas'}],
+ prods:[],cart:{},filter:0,q:'',tab:'home',edit:null,nid:100,published:true,updated:new Date()
+};
+[[1,'Picanha Divina',79.9,'Picanha grelhada no ponto, fatiada na hora, com alho dourado e sal grosso.','🥩','Especial da casa',482],
+[1,'Picanha na Brasa',89.9,'Corte nobre assado lentamente na brasa, servido com vinagrete artesanal.','🔥','Mais pedido',431],
+[1,'Costela Premium',74.9,'Costela bovina assada por 8 horas, macia e com crosta defumada.','🍖','',267],
+[2,'Executivo de Picanha',49.9,'Picanha, arroz, feijão tropeiro, farofa e salada fresca.','🍽️','Mais pedido',344],
+[2,'Filé Mignon Executivo',54.9,'Filé grelhado ao molho de mostarda com purê e legumes salteados.','🥘','',198],
+[3,'Burger Brasa',34.9,'Blend bovino na chapa, queijo prato, cebola caramelizada e pão brioche.','🍔','',305],
+[3,'Burger Artesanal Divino',39.9,'Blend de picanha, cheddar inglês, bacon crocante e maionese da casa.','🍔','Especial da casa',390],
+[4,'Batata Frita Crocante',19.9,'Batatas sequinhas com páprica e sal de ervas.','🍟','',256],
+[4,'Farofa da Casa',12.9,'Farofa de bacon com ovos e cebola dourada.','🥣','',140],
+[4,'Arroz à Brasileira',10.9,'Arroz soltinho temperado com alho e cebola.','🍚','',120],
+[5,'Refrigerante Lata',7.9,'Lata 350 ml, bem gelada.','🥤','',210],
+[5,'Suco Natural',12.9,'Laranja, limão ou abacaxi com hortelã, 400 ml.','🍊','',175],
+[6,'Pudim da Casa',14.9,'Pudim de leite cremoso com calda de caramelo.','🍮','Mais pedido',288],
+[6,'Brownie com Sorvete',19.9,'Brownie quente de chocolate com sorvete de creme e calda.','🍫','',233]
+].forEach((p,i)=>S.prods.push({id:i+1,cat:p[0],name:p[1],price:p[2],desc:p[3],img:p[4],tag:p[5],views:p[6],active:true}));
+
+const hue=id=>['#7B1E24','#3d3a36','#a8581f','#5f6b3a','#2f4f6b','#8a4a62'][(id-1)%6];
+const catName=id=>(S.cats.find(c=>c.id==id)||{name:'Sem categoria'}).name;
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.append(e);setTimeout(()=>e.remove(),1800)}
+function go(id){document.getElementById(id).scrollIntoView({behavior:'smooth'})}
+function applyTheme(){const r=document.documentElement.style;for(const k in S.colors)r.setProperty('--'+k,S.colors[k]);
+ $('#bName').textContent=S.name;$('#bSub').textContent=S.sub;$('#bPlate').textContent=S.plate;document.title=S.name+' — Cardápio digital (protótipo)'}
+
+/* público */
+function renderMenu(){
+ const q=S.q.trim().toLowerCase();
+ const cats=S.cats.filter(c=>S.cats&&(!S.filter||S.filter==c.id));
+ $('#chips').innerHTML=`<button class="chip ${!S.filter?'on':''}" onclick="S.filter=0;renderMenu()">Todas</button>`+S.cats.map(c=>`<button class="chip ${S.filter==c.id?'on':''}" onclick="S.filter=${c.id};renderMenu();go('menu')">${esc(c.name)}</button>`).join('');
+ let out='';
+ cats.forEach(c=>{
+  const ps=S.prods.filter(p=>p.cat==c.id&&p.active&&(!q||p.name.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q)));
+  if(!ps.length)return;
+  out+=`<section class="cat" id="cat${c.id}"><h2>${esc(c.name)}</h2><div class="grid">`+ps.map(p=>`
+  <article class="card"><div class="img" style="background:linear-gradient(135deg,${hue(c.id)},#171717)">${p.tag?`<span class="tag">${esc(p.tag)}</span>`:''}<span aria-hidden="true">${esc(p.img)}</span></div>
+  <div class="b"><h3>${esc(p.name)}</h3><p>${esc(p.desc)}</p><div class="row"><span class="price">${brl(p.price)}</span><button class="btn" onclick="add(${p.id})">Adicionar ao pedido</button></div></div></article>`).join('')+`</div></section>`});
+ $('#list').innerHTML=out||'<p class="empty">Nenhum produto encontrado. Tente outro termo ou escolha "Todas".</p>';
+}
+$('#q').addEventListener('input',e=>{S.q=e.target.value;renderMenu()});
+addEventListener('scroll',()=>{$('#top').style.display=scrollY>500?'block':'none'});
+function add(id){S.cart[id]=(S.cart[id]||0)+1;const p=S.prods.find(x=>x.id==id);p.views++;renderCart();toast(p.name+' adicionado')}
+function qty(id,d){S.cart[id]=(S.cart[id]||0)+d;if(S.cart[id]<=0)delete S.cart[id];renderCart()}
+function drawer(o){$('#drawer').classList.toggle('open',o)}
+function renderCart(){
+ const ids=Object.keys(S.cart).filter(id=>S.prods.some(p=>p.id==id));
+ let n=0,sum=0;
+ const rows=ids.map(id=>{const p=S.prods.find(x=>x.id==id),q=S.cart[id];n+=q;sum+=q*p.price;
+  return `<div class="li"><b>${esc(p.name)}</b><span>${brl(p.price*q)}</span><div class="qty"><button class="ghost" onclick="qty(${p.id},-1)" aria-label="Diminuir">−</button><span>${q}</span><button class="ghost" onclick="qty(${p.id},1)" aria-label="Aumentar">+</button></div><button class="ghost" onclick="qty(${p.id},-99)">Remover</button></div>`}).join('');
+ $('#cartBtn').textContent=`Pedido (demo) · ${n}`;
+ $('#cart').innerHTML=ids.length?rows+`<div class="row" style="margin-top:10px"><b>Subtotal</b><span class="price">${brl(sum)}</span></div><p class="muted">Simulação: não há checkout, pagamento nem envio de pedido.</p>`:'<p class="empty">Seu pedido está vazio. Toque em "Adicionar ao pedido" em qualquer prato.</p>';
+}
+
+/* admin */
+const TABS=[['home','Início'],['prods','Produtos'],['cats','Categorias'],['vis','Visual'],['nfc','Integração NFC'],['ana','Analytics']];
+function showAdmin(on){document.body.classList.toggle('adm',on);if(on){renderAdmin()}else{renderMenu()}scrollTo({top:0})}
+function tab(t){S.tab=t;S.edit=null;renderAdmin()}
+function stamp(){S.updated=new Date()}
+const simu='<span class="demo" style="color:var(--wine);border-color:var(--wine);background:#7B1E2412">Dados simulados</span>';
+function bars(items,fmt=v=>v){const m=Math.max(...items.map(i=>i[1]),1);return items.map(i=>`<div class="bar"><span>${esc(i[0])}</span><i style="width:${Math.max(2,i[1]/m*100*.55)}%"></i><b>${fmt(i[1])}</b></div>`).join('')}
+function vbars(items){const m=Math.max(...items.map(i=>i[1]));return `<svg viewBox="0 0 320 170" width="100%" role="img" aria-label="Acessos por dia (simulado)">`+items.map((d,i)=>{const h=d[1]/m*120;return `<rect x="${12+i*44}" y="${140-h}" width="30" height="${h}" rx="5" fill="var(--wine)"/><text x="${27+i*44}" y="${134-h}" font-size="11" text-anchor="middle" fill="#171717">${d[1]}</text><text x="${27+i*44}" y="158" font-size="11" text-anchor="middle" fill="#5c5650">${d[0]}</text>`}).join('')+`</svg>`}
+const week=[['Seg',64],['Ter',118],['Qua',132],['Qui',151],['Sex',246],['Sáb',329],['Dom',287]];
+function renderAdmin(){
+ $('#atabs').innerHTML=TABS.map(t=>`<button class="${S.tab==t[0]?'on':''}" onclick="tab('${t[0]}')">${t[1]}</button>`).join('');
+ const v=$('#aview'),act=S.prods.filter(p=>p.active),top=[...S.prods].sort((a,b)=>b.views-a.views);
+ if(S.tab=='home'){
+  v.innerHTML=`<p>${simu}</p><div class="kpis">
+  <div class="kpi"><b>${S.prods.length}</b>Produtos cadastrados<br><small>${act.length} ativos</small></div>
+  <div class="kpi"><b>${S.cats.length}</b>Categorias</div>
+  <div class="kpi"><b>${week.reduce((a,b)=>a+b[1],0)}</b>Acessos na semana<br><small>dados simulados</small></div>
+  <div class="kpi"><b>${S.published?'Publicado':'Rascunho'}</b>Status do cardápio<br><button class="ghost" style="min-height:34px;margin-top:6px" onclick="S.published=!S.published;stamp();renderAdmin()">Alternar</button></div>
+  <div class="kpi"><b style="font-size:1.1rem">${S.updated.toLocaleString('pt-BR')}</b>Última atualização (demo)</div></div>
+  <div class="panel"><h3>Produtos mais visualizados</h3>${bars(top.slice(0,5).map(p=>[p.name,p.views]))}</div>`}
+ if(S.tab=='prods'){
+  if(S.edit!==null){const p=S.edit===0?{name:'',price:'',cat:S.cats[0]?.id,desc:'',img:'🍽️',tag:'',active:true}:S.prods.find(x=>x.id==S.edit);
+   v.innerHTML=`<div class="panel"><h3>${S.edit===0?'Novo produto':'Editar produto'}</h3>
+   <label for="fn">Nome</label><input type="text" id="fn" value="${esc(p.name)}">
+   <label for="fp">Preço (R$)</label><input type="number" id="fp" step="0.01" min="0" value="${p.price}">
+   <label for="fc">Categoria</label><select id="fc">${S.cats.map(c=>`<option value="${c.id}" ${c.id==p.cat?'selected':''}>${esc(c.name)}</option>`).join('')}</select>
+   <label for="fd">Descrição</label><textarea id="fd" rows="3">${esc(p.desc)}</textarea>
+   <label for="fi">Imagem (emoji ilustrativo — este protótipo não carrega fotos externas)</label><input type="text" id="fi" maxlength="4" value="${esc(p.img)}">
+   <label for="ft">Destaque</label><select id="ft">${['','Mais pedido','Especial da casa'].map(t=>`<option ${t==p.tag?'selected':''} value="${t}">${t||'Nenhum'}</option>`).join('')}</select>
+   <label><input type="checkbox" id="fa" ${p.active?'checked':''}> Produto ativo no cardápio</label>
+   <div class="err" id="ferr"></div>
+   <button class="btn" onclick="saveProd()">Salvar produto</button> <button class="ghost" onclick="tab('prods')">Cancelar</button></div>`}
+  else v.innerHTML=`<div class="row" style="margin-bottom:10px"><h2>Produtos</h2><button class="btn" onclick="S.edit=0;renderAdmin()">Novo produto</button></div>
+  <div class="panel scroll"><table><tr><th></th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Ativo</th><th></th></tr>`+S.prods.map(p=>`<tr><td>${esc(p.img)}</td><td>${esc(p.name)}</td><td>${esc(catName(p.cat))}</td><td>${brl(p.price)}</td>
+  <td><button class="ghost" onclick="togProd(${p.id})">${p.active?'Ativo':'Inativo'}</button></td><td><button class="ghost" onclick="S.edit=${p.id};renderAdmin()">Editar</button> <button class="ghost" onclick="delProd(${p.id})">Remover</button></td></tr>`).join('')+`</table></div>`}
+ if(S.tab=='cats'){
+  v.innerHTML=`<div class="panel"><h3>Nova categoria</h3><div class="row"><input type="text" id="nc" placeholder="Nome da categoria"><button class="btn" onclick="addCat()">Criar categoria</button></div><div class="err" id="cerr"></div></div>
+  <div class="panel scroll"><table><tr><th>Nome</th><th>Produtos</th><th></th></tr>`+S.cats.map(c=>{const n=S.prods.filter(p=>p.cat==c.id).length;return `<tr><td><input type="text" id="c${c.id}" value="${esc(c.name)}" aria-label="Nome da categoria"></td><td>${n}<br><small class="muted">${esc(S.prods.filter(p=>p.cat==c.id).map(p=>p.name).join(', ')||'—')}</small></td><td><button class="ghost" onclick="renCat(${c.id})">Salvar nome</button> <button class="ghost" onclick="delCat(${c.id})">Excluir</button></td></tr>`}).join('')+`</table></div>`}
+ if(S.tab=='vis'){
+  v.innerHTML=`<div class="panel"><h3>Personalização visual</h3>
+  <label for="vn">Nome do restaurante (logotipo textual)</label><input type="text" id="vn" value="${esc(S.name)}">
+  <label for="vs">Subtítulo</label><input type="text" id="vs" value="${esc(S.sub)}">
+  <label for="vp">Imagem do banner (emoji ilustrativo)</label><input type="text" id="vp" maxlength="4" value="${esc(S.plate)}">
+  <div style="display:flex;gap:16px;flex-wrap:wrap"><div><label>Vinho</label><input type="color" id="cw" value="${S.colors.wine}"></div><div><label>Dourado</label><input type="color" id="cg" value="${S.colors.gold}"></div><div><label>Carvão</label><input type="color" id="ci" value="${S.colors.ink}"></div><div><label>Fundo</label><input type="color" id="cp" value="${S.colors.paper}"></div></div>
+  <p><button class="btn" onclick="saveVis()">Aplicar ao cardápio</button> <button class="ghost" onclick="resetVis()">Restaurar padrão</button></p></div>`}
+ if(S.tab=='nfc'){
+  const url=location.href.split('#')[0];
+  v.innerHTML=`<div class="panel"><h3>Integração NFC</h3><p><span class="ok">Pronto para teste</span></p>
+  <label>URL pública do cardápio ${location.protocol.startsWith('http')?'':'(simulada — publique para obter a URL real)'}</label><p><code id="u">${esc(url)}</code></p>
+  <button class="btn" onclick="copyU()">Copiar URL</button> <button class="ghost" onclick="showAdmin(false)">Visualizar cardápio</button></div>
+  <div class="warn">A gravação física da tag NFC é realizada por um dispositivo externo. Este painel apenas disponibiliza a URL que poderá ser gravada no chip.</div>
+  <div class="panel" style="margin-top:14px"><h3>Como gravar na tag NFC</h3><ol><li>Publique o arquivo em uma hospedagem e copie a URL final (com https).</li><li>Instale um app de gravação NFC (por exemplo, NFC Tools ou NFC TagWriter).</li><li>Escolha "Gravar" → "URL/URI", cole o endereço e confirme.</li><li>Aproxime a tag das costas do celular quando o app pedir.</li><li>Teste: aproxime um celular sem o app aberto e confira se o cardápio abre.</li></ol><p class="muted">iPhones recentes leem tags NFC automaticamente; em Android, o NFC precisa estar ativado.</p></div>`}
+ if(S.tab=='ana'){
+  const byCat=S.cats.map(c=>[c.name,S.prods.filter(p=>p.cat==c.id).reduce((a,p)=>a+p.views,0)]);
+  v.innerHTML=`<p>${simu}</p><div class="two"><div class="panel"><h3>Acessos ao cardápio na semana</h3>${vbars(week)}</div>
+  <div class="panel"><h3>Produtos mais visualizados</h3>${bars(top.slice(0,6).map(p=>[p.name,p.views]))}</div>
+  <div class="panel"><h3>Acessos por categoria</h3>${bars(byCat)}</div>
+  <div class="panel"><h3>Engajamento</h3>${bars([['Tempo médio (s)',94],['Itens vistos/visita',7],['Buscas/visita',2],['Retorno em 7 dias (%)',31]])}</div></div>`}
+}
+function saveProd(){
+ const n=$('#fn').value.trim(),pr=parseFloat($('#fp').value),d=$('#fd').value.trim();
+ if(n.length<2)return $('#ferr').textContent='Informe um nome com pelo menos 2 letras.';
+ if(!(pr>=0)||$('#fp').value==='')return $('#ferr').textContent='Informe um preço válido, como 79.90.';
+ if(!d)return $('#ferr').textContent='Escreva uma descrição breve.';
+ const o={name:n,price:pr,cat:+$('#fc').value,desc:d,img:$('#fi').value.trim()||'🍽️',tag:$('#ft').value,active:$('#fa').checked};
+ if(S.edit===0)S.prods.push({id:S.nid++,views:0,...o});else Object.assign(S.prods.find(p=>p.id==S.edit),o);
+ stamp();toast('Produto salvo');tab('prods');renderMenu();renderCart()}
+function togProd(id){const p=S.prods.find(x=>x.id==id);p.active=!p.active;stamp();renderAdmin();renderMenu()}
+function delProd(id){if(!confirm('Remover este produto do cardápio?'))return;S.prods=S.prods.filter(p=>p.id!=id);delete S.cart[id];stamp();renderAdmin();renderMenu();renderCart()}
+function addCat(){const n=$('#nc').value.trim();if(n.length<2)return $('#cerr').textContent='Informe um nome com pelo menos 2 letras.';S.cats.push({id:S.nid++,name:n});stamp();renderAdmin();renderMenu();toast('Categoria criada')}
+function renCat(id){const n=$('#c'+id).value.trim();if(n.length<2)return toast('Nome muito curto');S.cats.find(c=>c.id==id).name=n;stamp();renderMenu();toast('Nome salvo')}
+function delCat(id){const n=S.prods.filter(p=>p.cat==id).length;if(!confirm(n?`Excluir a categoria e os ${n} produto(s) dela?`:'Excluir esta categoria?'))return;S.prods=S.prods.filter(p=>p.cat!=id);S.cats=S.cats.filter(c=>c.id!=id);if(S.filter==id)S.filter=0;stamp();renderAdmin();renderMenu();renderCart()}
+function saveVis(){S.name=$('#vn').value.trim()||'Picanha Divina';S.sub=$('#vs').value.trim();S.plate=$('#vp').value.trim()||'🥩';S.colors={wine:$('#cw').value,gold:$('#cg').value,ink:$('#ci').value,paper:$('#cp').value};stamp();applyTheme();toast('Visual aplicado')}
+function resetVis(){S.name='Picanha Divina';S.sub='O sabor do verdadeiro churrasco brasileiro';S.plate='🥩';S.colors={wine:'#7B1E24',gold:'#C8A96B',ink:'#171717',paper:'#F8F5EF'};applyTheme();renderAdmin()}
+function copyU(){const u=$('#u').textContent;(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast('URL copiada'),()=>{const r=document.createRange();r.selectNodeContents($('#u'));getSelection().removeAllRanges();getSelection().addRange(r);toast('Selecione e copie a URL')})}
+applyTheme();renderMenu();renderCart();
+</script>
+</body>
+</html>
